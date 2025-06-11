@@ -20,6 +20,8 @@ namespace SchoolManagementSystem
             Score = score;
         }
 
+        //Giving feedback based on student's score
+
         public string GetFeedback()
         {
             return Score switch
