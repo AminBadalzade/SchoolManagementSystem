@@ -41,17 +41,42 @@ namespace SchoolManagementSystem
             public string CourseId { get; private set; }
             public string Title { get; private set; }
             public int Credits { get; set; }
-            public Teacher teacher { get; set; }
+            public Teacher Teacher { get; set; }
+            public static List<Course> courses = new List<Course>();
+            private static int num = 1;
             public List<Student> EnrolledStudents { get; private set; } = new List<Student>();
 
              public Dictionary<Student, Grade> GradesOfStudents { get; private set; } = new Dictionary<Student, Grade>();
 
-        public Course(string id, string title, int credits)
-             {
-            CourseId = id;
+        public Course(string title, int credits, Teacher teacher)
+        {
+            if (!Teacher.teachers.Contains(teacher))
+            {
+                throw new ArgumentException("This teacher is not registered in the system.");
+            }
+
+            Teacher = teacher;
+            CourseId = (100 + num).ToString();
+
+            if (courses.Any(c => c.CourseId == CourseId))
+            {
+                throw new ArgumentException("A course with this ID already exists.");
+            }
+
             Title = title;
             Credits = credits;
+            courses.Add(this);
+            num++;
+        }
+
+        public static void CoursesInSchool()
+        {
+            Console.WriteLine("Here is the information about courses in school");
+            foreach(var course in courses)
+            {
+                Console.WriteLine($"{course.Title} ({course.CourseId}) which contains {course.Credits} is given by {course.Teacher}");
             }
+        }
 
         public void Enroll(Student student, int InitialScore = -1)
         {

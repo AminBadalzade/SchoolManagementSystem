@@ -56,4 +56,55 @@ namespace SchoolManagementSystem
        
 
     }
+
+    public class Teacher : Person
+    {
+        public string Specialization { get;  set; }
+        public string DefaultEmail { get; private set; }
+
+        public static List<Teacher> teachers = new List<Teacher>();
+
+        public Teacher(string firstName, string lastName, DateTime DateOfBirth, string specialization) : base(firstName, lastName, DateOfBirth)
+        {
+  
+            Specialization = specialization;
+
+            DefaultEmail = GenerateEmail(firstName, lastName);
+
+            teachers.Add(this);
+        }
+
+        private string GenerateEmail(string firstName, string lastName)
+        {
+            string baseEmail = $"{firstName.ToLower()}.{lastName.ToLower()}@gmail.com";
+            int suffix = 1;
+            string emailToCheck = baseEmail;
+
+            while(teachers.Any(t => t.DefaultEmail == emailToCheck)){
+                suffix++;
+                emailToCheck = $"{firstName.ToLower()}.{lastName.ToLower()}{suffix}@gmail.com";
+            }
+
+            return emailToCheck;
+        }
+
+        public static void OurTeachers()
+        {
+            Console.WriteLine("List of all teachers:");
+            foreach (var teacher in teachers)
+            {
+                Console.WriteLine($"{teacher.FirstName} {teacher.LastName} - Specialization: {teacher.Specialization}, Email: {teacher.DefaultEmail}");
+            }
+        }
+
+        //When you reference {course.Teacher} inside the Console.WriteLine, it automatically calls
+        //the ToString() method of the Teacher class
+
+        public override string ToString() //public override string ToString() => $"{FirstName} {LastName}";
+        {
+            return $"{FirstName} {LastName}";
+        }
+
+
+    }
 }
